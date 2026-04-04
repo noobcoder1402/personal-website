@@ -184,7 +184,10 @@ const App = () => {
     styleEl.textContent = `
       @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
-      * { cursor: none !important; }
+      *, *::before, *::after,
+      a, button, input, textarea, select, label,
+      a *, button *, video, video::-webkit-media-controls,
+      [role="button"], [onclick] { cursor: none !important; }
 
       @keyframes float-1 {
         0% { transform: translateY(0px) rotate(-3deg); }

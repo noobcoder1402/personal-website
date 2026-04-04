@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*, *::before, *::after,
+a, button, input, textarea, select, label,
+a *, button *, video, video::-webkit-media-controls,
+[role="button"], [onclick] {
+  cursor: none !important;
+}
