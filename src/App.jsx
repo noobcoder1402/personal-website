@@ -177,17 +177,25 @@ const App = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [cursorScale, setCursorScale] = useState(1);
+  const [hasPointer, setHasPointer] = useState(false);
   const audioRef = useRef(null);
+  const heroVideoRef = useRef(null);
+
+  useEffect(() => {
+    setHasPointer(window.matchMedia('(pointer: fine) and (min-width: 768px)').matches);
+  }, []);
 
   useEffect(() => {
     const styleEl = document.createElement('style');
     styleEl.textContent = `
       @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
-      *, *::before, *::after,
-      a, button, input, textarea, select, label,
-      a *, button *, video, video::-webkit-media-controls,
-      [role="button"], [onclick] { cursor: none !important; }
+      @media (pointer: fine) and (min-width: 768px) {
+        *, *::before, *::after,
+        a, button, input, textarea, select, label,
+        a *, button *, video, video::-webkit-media-controls,
+        [role="button"], [onclick] { cursor: none !important; }
+      }
 
       @keyframes float-1 {
         0% { transform: translateY(0px) rotate(-3deg); }
@@ -359,6 +367,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    if (!hasPointer) return;
     const handleMouseMove = (e) => setCursorPos({ x: e.clientX, y: e.clientY });
     const handleMouseDown = () => setCursorScale(0.9);
     const handleMouseUp = () => setCursorScale(1);
@@ -370,7 +379,7 @@ const App = () => {
       document.removeEventListener('mousedown', handleMouseDown);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, []);
+  }, [hasPointer]);
 
   useEffect(() => {
     const flowerColors = ['#f15a24', '#0028e5', '#FFD700'];
@@ -569,24 +578,26 @@ const App = () => {
         crossOrigin="anonymous"
       />
 
-      {/* Custom Cursor */}
-      <div
-        style={{
-          position: 'fixed',
-          pointerEvents: 'none',
-          zIndex: 10000,
-          width: '32px',
-          height: '32px',
-          top: 0,
-          left: 0,
-          transform: `translate(${cursorPos.x - 4}px, ${cursorPos.y - 4}px) scale(${cursorScale})`,
-          willChange: 'transform',
-        }}
-      >
-        <svg width="32" height="32" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ filter: 'drop-shadow(2px 2px 0px rgba(0,0,0,0.15))' }}>
-          <path d="M1,1 V15 L4,12 H7 L1,1 Z" fill="#f15a24" stroke="#0028e5" strokeWidth="1.5" strokeLinejoin="miter" />
-        </svg>
-      </div>
+      {/* Custom Cursor (desktop only) */}
+      {hasPointer && (
+        <div
+          style={{
+            position: 'fixed',
+            pointerEvents: 'none',
+            zIndex: 10000,
+            width: '32px',
+            height: '32px',
+            top: 0,
+            left: 0,
+            transform: `translate(${cursorPos.x - 4}px, ${cursorPos.y - 4}px) scale(${cursorScale})`,
+            willChange: 'transform',
+          }}
+        >
+          <svg width="32" height="32" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ filter: 'drop-shadow(2px 2px 0px rgba(0,0,0,0.15))' }}>
+            <path d="M1,1 V15 L4,12 H7 L1,1 Z" fill="#f15a24" stroke="#0028e5" strokeWidth="1.5" strokeLinejoin="miter" />
+          </svg>
+        </div>
+      )}
 
       {/* Nav */}
       <nav className="w-full px-8 py-6 flex justify-end items-center fixed top-0 z-40 bg-transparent mix-blend-color-burn">
@@ -604,14 +615,17 @@ const App = () => {
           <div className="relative flex-shrink-0">
             <div className="w-64 h-64 md:w-80 md:h-80 bg-[#f15a24] rounded-[3rem] border-4 border-white shadow-2xl flex items-center justify-center relative overflow-hidden">
               <video
+                ref={heroVideoRef}
                 autoPlay
                 loop
                 muted
                 playsInline
+                webkit-playsinline=""
                 className="w-full h-full object-cover"
                 style={{
                   objectPosition: 'center',
                 }}
+                onLoadedData={() => heroVideoRef.current?.play().catch(() => {})}
               >
                 <source src="/video-avatar.mp4" type="video/mp4" />
               </video>

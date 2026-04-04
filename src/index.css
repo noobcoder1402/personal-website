@@ -2,9 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-*, *::before, *::after,
-a, button, input, textarea, select, label,
-a *, button *, video, video::-webkit-media-controls,
-[role="button"], [onclick] {
-  cursor: none !important;
+@media (pointer: fine) and (min-width: 768px) {
+  *, *::before, *::after,
+  a, button, input, textarea, select, label,
+  a *, button *, video, video::-webkit-media-controls,
+  [role="button"], [onclick] {
+    cursor: none !important;
+  }
 }
