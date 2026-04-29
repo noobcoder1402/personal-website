@@ -990,7 +990,7 @@ const MusicPlayer = ({ isPlaying, toggleMusic }) => (
       )}
     </button>
     <div className="flex flex-col">
-      <span className="text-xs font-bold text-[#0028e5] leading-none">{isPlaying ? 'Who you gonna call?' : 'Play some music'}</span>
+      <span className="text-xs font-bold text-[#0028e5] leading-none">{isPlaying ? 'Music is Magic' : 'Play some music'}</span>
     </div>
     <MusicBars visible={isPlaying} />
   </div>
