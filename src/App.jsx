@@ -182,6 +182,16 @@ const App = () => {
   const heroVideoRef = useRef(null);
 
   useEffect(() => {
+    const v = heroVideoRef.current;
+    if (!v) return;
+    const tryPlay = () => v.play().catch(() => {});
+    tryPlay();
+    const onVisible = () => { if (!document.hidden) tryPlay(); };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => document.removeEventListener('visibilitychange', onVisible);
+  }, []);
+
+  useEffect(() => {
     setHasPointer(window.matchMedia('(pointer: fine) and (min-width: 768px)').matches);
   }, []);
 
@@ -600,10 +610,10 @@ const App = () => {
       )}
 
       {/* Nav */}
-      <nav className="w-full px-8 py-6 flex justify-end items-center fixed top-0 z-40 bg-transparent mix-blend-color-burn">
+      <nav className="w-full px-4 py-3 md:px-8 md:py-6 flex justify-end items-center fixed top-0 z-40 bg-transparent mix-blend-color-burn">
         <button
           onClick={() => setContactOpen(true)}
-          className="px-6 py-3 bg-[#0028e5] text-white border-2 border-[#0028e5] rounded-full font-semibold tracking-wide text-sm shadow-[4px_4px_0px_#f15a24] hover:-translate-y-1 transition-all"
+          className="px-4 py-2 md:px-6 md:py-3 bg-[#0028e5] text-white border-2 border-[#0028e5] rounded-full font-semibold tracking-wide text-sm shadow-[4px_4px_0px_#f15a24] hover:-translate-y-1 transition-all"
         >
           Let's Talk
         </button>
@@ -621,7 +631,10 @@ const App = () => {
                 muted
                 playsInline
                 webkit-playsinline=""
-                className="w-full h-full object-cover"
+                controls={false}
+                disablePictureInPicture
+                controlsList="nodownload nofullscreen noremoteplayback"
+                className="w-full h-full object-cover pointer-events-none"
                 style={{
                   objectPosition: 'center',
                 }}

@@ -691,8 +691,8 @@ const MusicPlayer = ({ isPlaying, setIsPlaying }) => (
       )}
     </button>
     <div className="flex flex-col">
-      <span className="text-[10px] font-bold tracking-wider uppercase text-gray-500 leading-none mb-1">Now Playing</span>
-      <span className="text-xs font-bold text-[#0028e5] leading-none">Studio Ghibli Beats</span>
+      <span className="text-[10px] font-bold tracking-wider uppercase text-gray-500 leading-none mb-1">{isPlaying ? 'Now Playing' : 'Play Some Music'}</span>
+      <span className="text-xs font-bold text-[#0028e5] leading-none">{isPlaying ? 'Music is Magic' : ''}</span>
     </div>
     <MusicBars visible={isPlaying} />
   </div>
